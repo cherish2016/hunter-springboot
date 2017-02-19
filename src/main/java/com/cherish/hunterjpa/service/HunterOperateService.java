@@ -27,6 +27,4 @@ public class HunterOperateService {
         return baseRepository.findAll();
     }
 
-
-
 }
