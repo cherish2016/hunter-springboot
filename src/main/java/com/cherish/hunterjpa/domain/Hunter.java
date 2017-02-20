@@ -17,7 +17,8 @@ public class Hunter {
     private String status;
     private String originalPosition;
     private String updateTime;
-    private String reason;
+    private String remarks;
+    private String fileLink;
 
     public String getName() {
         return name;
@@ -67,12 +68,19 @@ public class Hunter {
         this.updateTime = updateTime;
     }
 
-    public String getReason() {
-        return reason;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
+    public String getFileLink() {
+        return fileLink;
+    }
+
+    public void setFileLink(String fileLink) {
+        this.fileLink = fileLink;
+    }
 }

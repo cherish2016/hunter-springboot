@@ -49,7 +49,7 @@ public class Xlsx2Bean {
         hunter.setStatus(getValue(ssfRow.getCell(3)));
         hunter.setOriginalPosition(getValue(ssfRow.getCell(4)));
         hunter.setUpdateTime(getValue(ssfRow.getCell(6)));
-        hunter.setReason(getValue(ssfRow.getCell(7)));
+        hunter.setRemarks(getValue(ssfRow.getCell(7)));
         return hunter;
     }
 

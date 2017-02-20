@@ -2,6 +2,7 @@ package com.cherish.hunterjpa.service;
 
 import com.cherish.hunterjpa.domain.Hunter;
 import com.cherish.hunterjpa.repository.HunterBaseRepository;
+import com.cherish.hunterjpa.xlsx.Doc2Bean;
 import com.cherish.hunterjpa.xlsx.Xlsx2Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,12 @@ public class HunterOperateService {
         baseRepository.save(hunters);
     }
 
-    public List<Hunter> s1 () {
+    public void saveDoc2Mysql(String docPath) {
+        List<Hunter> hunters = new Doc2Bean().getHuntersFromDoc(docPath);
+        baseRepository.save(hunters);
+    }
+
+    public List<Hunter> s1() {
         return baseRepository.findAll();
     }
 

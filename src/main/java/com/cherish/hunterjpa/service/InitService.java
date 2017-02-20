@@ -17,7 +17,8 @@ public class InitService {
 
     @PostConstruct
     public void init() {
-        hunterOperateService.saveXlsx2Mysql("E:\\hunter-springboot\\excel.xlsx");
+        hunterOperateService.saveDoc2Mysql("E:\\hunter-springboot\\test.doc");
+//        hunterOperateService.saveXlsx2Mysql("E:\\hunter-springboot\\excel.xlsx");
     }
 
 }
