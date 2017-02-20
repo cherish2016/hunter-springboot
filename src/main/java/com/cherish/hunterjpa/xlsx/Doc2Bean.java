@@ -16,37 +16,60 @@ import java.util.Optional;
  */
 public class Doc2Bean {
 
+    private static List<File> filesOfDir = new ArrayList<>();
+
     public List<Hunter> getHuntersFromDoc(String filePath) {
         List<Hunter> hunters = new ArrayList<>();
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream(new File(filePath));
-            WordExtractor extractor = new WordExtractor(in);
-            String[] split = Optional.of(extractor.getText()).map(s -> s.split("\r\n")).orElse(new String[20]);
-            Hunter hunter = new Hunter();
-            hunter.setName(split[1].split("：")[1]);
-            hunter.setPhone(split[2].split("：")[1]);
-            hunter.setAddress(split[3]);
-            hunter.setStatus(split[4]);
-            hunter.setOriginalPosition(split[5]);
-            hunter.setUpdateTime(split[8]);
-            hunter.setRemarks(split[19]);
-            hunter.setFileLink(filePath);
-            hunters.add(hunter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+        File file = new File(filePath);
+        initFilePathOfDir(file);
+        filesOfDir.forEach(f -> {
+            FileInputStream in = null;
             try {
-                assert in != null;
-                in.close();
-            } catch (IOException e) {
-                //
+                in = new FileInputStream(f);
+                WordExtractor extractor = new WordExtractor(in);
+                String[] split = Optional.of(extractor.getText()).map(s -> s.split("\r\n")).orElse(new String[20]);
+                Hunter hunter = new Hunter();
+                hunter.setName(split[1].split("：")[1]);
+                hunter.setPhone(split[2].split("：")[1]);
+                hunter.setAddress(split[3]);
+                hunter.setStatus(split[4]);
+                hunter.setOriginalPosition(split[5]);
+                hunter.setUpdateTime(split[8]);
+                hunter.setRemarks(split[19]);
+                hunter.setFileLink(f.getPath());
+                hunters.add(hunter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    assert in != null;
+                    in.close();
+                } catch (IOException e) {
+                    //
+                }
             }
-        }
+        });
+        filesOfDir.clear();
         return hunters;
     }
 
+    private static void initFilePathOfDir(File f) {
+        if (f != null) {
+            if (f.isDirectory()) {
+                File[] fileArray = f.listFiles();
+                if (fileArray != null) {
+                    for (File aFileArray : fileArray) {
+                        //递归调用
+                        initFilePathOfDir(aFileArray);
+                    }
+                }
+            } else {
+                filesOfDir.add(f);
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        new Doc2Bean().getHuntersFromDoc("E:\\hunter-springboot\\test.doc");
+        new Doc2Bean().getHuntersFromDoc("E:\\test");
     }
 }
