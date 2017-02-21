@@ -17,13 +17,13 @@ import java.util.List;
 @RestController
 public class HunterController {
 
-    protected static Logger logger= LoggerFactory.getLogger(HunterController.class);
+    protected static Logger logger = LoggerFactory.getLogger(HunterController.class);
 
     @Autowired
     private HunterOperateService hunterOperateService;
 
     @GetMapping("/search")
-    public List<Hunter> h1 () {
-        return hunterOperateService.s1();
+    public List<Hunter> h1() {
+        return null;
     }
 }

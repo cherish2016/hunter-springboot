@@ -14,3 +14,10 @@ spring:
     show-sql: true
   jackson:
     serialization: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: ERROR
+      hibernate: ERROR

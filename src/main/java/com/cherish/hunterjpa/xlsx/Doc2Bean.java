@@ -64,12 +64,17 @@ public class Doc2Bean {
                     }
                 }
             } else {
-                filesOfDir.add(f);
+                if (f.getName().endsWith(".doc")) {
+                    filesOfDir.add(f);
+                }
             }
         }
     }
 
-    public static void main(String[] args) {
-        new Doc2Bean().getHuntersFromDoc("E:\\test");
+    public static List<File> getFilesOfDir(String filePath) {
+        File file = new File(filePath);
+        initFilePathOfDir(file);
+        return filesOfDir;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.cherish.hunterjpa.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -10,15 +11,26 @@ import javax.persistence.Id;
 @Entity
 public class Hunter {
 
+
     @Id
-    private String name;
-    private String phone;
-    private String address;
-    private String status;
-    private String originalPosition;
-    private String updateTime;
-    private String remarks;
-    private String fileLink;
+    @GeneratedValue
+    private long id = 1;
+    private String phone = " ";
+    private String name = " ";
+    private String address = " ";
+    private String status = " ";
+    private String originalPosition = " ";
+    private String updateTime = " ";
+    private String remarks = " ";
+    private String fileLink = " ";
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
