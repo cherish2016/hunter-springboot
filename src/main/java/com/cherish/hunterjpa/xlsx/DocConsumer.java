@@ -2,7 +2,7 @@ package com.cherish.hunterjpa.xlsx;
 
 import com.cherish.hunterjpa.domain.Hunter;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.List;
 
 /**
  * doc 转hunter对象只有入库
@@ -21,17 +21,18 @@ public abstract class DocConsumer implements Runnable {
     public void run() {
         try {
             while (true) {
-                consumer(docStorage.getQueues());
                 if (docStorage.getQueues().size() == 0) {
                     System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-                    Thread.sleep(1);
+                    Thread.sleep(100);
+                } else {
+                    consumer(docStorage.pop());
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public abstract void consumer(BlockingQueue<Hunter> hunter);
+    public abstract void consumer(List<Hunter> hunters);
 }

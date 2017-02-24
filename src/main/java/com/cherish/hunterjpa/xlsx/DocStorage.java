@@ -2,6 +2,7 @@ package com.cherish.hunterjpa.xlsx;
 
 import com.cherish.hunterjpa.domain.Hunter;
 
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,18 +12,20 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class DocStorage {
 
-    private final int MAX_SIZE = 500;
+    private final int MAX_SIZE = 10;
 
-    private BlockingQueue<Hunter> queues = new LinkedBlockingQueue<>(MAX_SIZE);
+    private BlockingQueue<List<Hunter>> queues = new LinkedBlockingQueue<>(MAX_SIZE);
+
+    public boolean isWorking = true;
 
     /**
      * 生产
      *
-     * @param hunter DOC
+     * @param hunters DOC
      * @throws InterruptedException
      */
-    public void push(Hunter hunter) throws InterruptedException {
-        queues.put(hunter);
+    public void push(List<Hunter> hunters) throws InterruptedException {
+        queues.put(hunters);
     }
 
     /**
@@ -31,11 +34,11 @@ public class DocStorage {
      * @return hunter
      * @throws InterruptedException
      */
-    public Hunter pop() throws InterruptedException {
+    public List<Hunter> pop() throws InterruptedException {
         return queues.take();
     }
 
-    public BlockingQueue<Hunter> getQueues() {
+    public BlockingQueue<List<Hunter>> getQueues() {
         return queues;
     }
 

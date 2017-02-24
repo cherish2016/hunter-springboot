@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,19 +38,38 @@ public class HunterOperateService {
         DocStorage docStorage = new DocStorage();
 
         ExecutorService service = Executors.newCachedThreadPool();
-        final String[] producerName = {"p"};
-        lists.forEach(files -> {
-            producerName[0] += "q";
-            service.submit(new DocProducer(producerName[0], docStorage, files));
-        });
+        int i = 1;
+        for (List<File> list : lists) {
+            service.submit(new DocProducer("producer" + i, docStorage, list));
+            i++;
+        }
         DocConsumer docConsumer = new DocConsumer("consumer", docStorage) {
             @Override
-            public void consumer(BlockingQueue<Hunter> hunters) {
-                baseRepository.save(hunters);
-                hunters.clear();
+            public void consumer(List<Hunter> hunters) {
+                for (Hunter hunter : hunters) {
+                    baseRepository.save(hunter);
+                }
+            }
+        };
+        DocConsumer docConsumer1 = new DocConsumer("consumer1", docStorage) {
+            @Override
+            public void consumer(List<Hunter> hunters) {
+                for (Hunter hunter : hunters) {
+                    baseRepository.save(hunter);
+                }
+            }
+        };
+        DocConsumer docConsumer2 = new DocConsumer("consumer2", docStorage) {
+            @Override
+            public void consumer(List<Hunter> hunters) {
+                for (Hunter hunter : hunters) {
+                    baseRepository.save(hunter);
+                }
             }
         };
         service.submit(docConsumer);
+        service.submit(docConsumer1);
+        service.submit(docConsumer2);
     }
 
 }

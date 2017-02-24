@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Doc 生产者
@@ -28,24 +27,28 @@ public class DocProducer implements Runnable {
 
     public void run() {
         int size = filesOfDir.size();
+        ArrayList<Hunter> hunters = new ArrayList<>();
         for (File file : filesOfDir) {
             FileInputStream in = null;
-            String path = file.getPath();
             try {
                 in = new FileInputStream(file);
                 WordExtractor extractor = new WordExtractor(in);
-                Hunter hunter = getHunter(path, extractor);
-                docStorage.push(hunter);
                 if (docStorage.getQueues().size() >= docStorage.getMAX_SIZE()) {
-                    System.out.println("暂停生产???????????????????????????????????????????????????????????????????????????????????");
-                    Thread.sleep(5);
+                    System.out.println("暂停生产???????????????????????????????????" + file.getPath());
+                    Thread.sleep(100);
+                }
+                if (hunters.size() <= 100) {
+                    hunters.add(getHunter(file, extractor));
+                } else {
+                    docStorage.push((List<Hunter>) hunters.clone());
+                    hunters.clear();
                 }
                 size--;
                 if (size < 100) {
-                    System.out.println(name + "剩余：" + size);
+                    System.out.println(this.name + "剩余：" + size);
                 }
             } catch (Exception e) {
-                System.out.println("<<<<<<<<<<<<<<<<<<<<" + path);
+                System.out.println("<<<<<<<<<<<<<<<<<<<<" + file.getPath());
             } finally {
                 try {
                     assert in != null;
@@ -55,32 +58,23 @@ public class DocProducer implements Runnable {
                 }
             }
         }
-
     }
 
-    private Hunter getHunter(String path, WordExtractor extractor) {
-        String text = extractor.getText();
-//        String[] split = Optional.of(text).map(s -> s.split("\r\n")).orElse(new String[20]);
+    private Hunter getHunter(File fileName, WordExtractor extractor) {
         Hunter hunter = new Hunter();
-        hunter.setEducation(getEducaion(text));
-        String phone = path.substring(path.indexOf("_") + 1, path.lastIndexOf("_"));
-        hunter.setPhone(phone);
-        hunter.setFileLink(path);
-        hunter.setSchool(getSchoolName(text));
-        hunter.setWorkingYears(getWorkAge(text));
-/*        try {
-           *//* for (String s : split) {
-                if (s.contains("大学（")) {
-                    hunter.setSchool(s.substring(0, s.indexOf("（")));
-                }
-                if (s.contains("工作年限：")) {
-                    String year = Optional.ofNullable(s.split("：")[1].split(" ")[0]).orElse("未知");
-                    hunter.setWorkingYears(year);
-                }
-            }*//*
+        try {
+            String[] infos = fileName.getName().split("_");
+            String text = extractor.getText();
+            hunter.setName(infos[0]);
+            hunter.setPhone(infos[1]);
+            hunter.setAddress(infos[2].replace(".doc", ""));
+            hunter.setEducation(getEducaion(text));
+            hunter.setFileLink(fileName.getPath());
+            hunter.setSchool(getSchoolName(text));
+            hunter.setWorkingYears(getWorkAge(text));
         } catch (Exception e) {
-            return hunter;
-        }*/
+            System.out.println("sssssss");
+        }
         return hunter;
     }
 
@@ -93,10 +87,18 @@ public class DocProducer implements Runnable {
     }
 
     private String getSchoolName(String text) {
+        int endIndex;
         if (text.contains("大学（")) {
-            int endIndex = text.indexOf("大学（");
+            endIndex = text.indexOf("大学（");
             String substring = text.substring(endIndex - 8, endIndex + 2);
-            return substring.substring(substring.indexOf("\n"));
+            int beginIndex1 = substring.indexOf("\n");
+            int beginIndex2 = substring.indexOf(" ");
+            int beginIndex3 = substring.indexOf("\t");
+            int beginIndex = beginIndex1 > -1 ? beginIndex1
+                    : beginIndex2 > -1 ? beginIndex2
+                    : beginIndex3 > -1 ? beginIndex3
+                    : 0;
+            return substring.substring(beginIndex);
         }
         return "未知";
     }
