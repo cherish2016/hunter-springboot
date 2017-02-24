@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 查询简历信息处理类
+ * 简历信息入库操作类
  * Created by cherish on 2017/2/18.
  */
 @Component
@@ -24,8 +24,12 @@ public class HunterOperateService {
     private HunterBaseRepository baseRepository;
 
     public void saveXlsx2Mysql(String xlsxPath) {
-        List<Hunter> hunters = new Xlsx2Bean().excel2ResumesOfJson(xlsxPath);
-        baseRepository.save(hunters);
+        new Xlsx2Bean() {
+            @Override
+            public void insertHunter2Mysql(List<Hunter> hunters) {
+                baseRepository.save(hunters);
+            }
+        }.excel2Resumes(xlsxPath);
     }
 
     public void saveDoc2Mysql(String docPath) {

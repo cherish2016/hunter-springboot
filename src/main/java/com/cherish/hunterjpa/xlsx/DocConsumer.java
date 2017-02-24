@@ -22,9 +22,9 @@ public abstract class DocConsumer implements Runnable {
         try {
             while (true) {
                 consumer(docStorage.getQueues());
-                System.out.println("===============");
                 if (docStorage.getQueues().size() == 0) {
-                    Thread.sleep(50);
+                    System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                    Thread.sleep(1);
                 }
             }
         } catch (InterruptedException e) {

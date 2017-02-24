@@ -11,12 +11,12 @@ import javax.persistence.Id;
 @Entity
 public class Hunter {
 
-
     @Id
-    @GeneratedValue
-    private long id = 1;
     private String phone = " ";
     private String name = " ";
+    private String education;
+    private String school;
+    private String workingYears;
     private String address = " ";
     private String status = " ";
     private String originalPosition = " ";
@@ -24,20 +24,36 @@ public class Hunter {
     private String remarks = " ";
     private String fileLink = " ";
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getWorkingYears() {
+        return workingYears;
+    }
+
+    public void setWorkingYears(String workingYears) {
+        this.workingYears = workingYears;
     }
 
     public String getPhone() {
