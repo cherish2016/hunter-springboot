@@ -13,7 +13,7 @@ import java.util.List;
  * Doc 生产者
  * Created by Administrator on 2017/2/21.
  */
-public class DocProducer implements Runnable {
+public abstract class DocProducer implements Runnable {
 
     private String name;
     private DocStorage docStorage = null;
@@ -35,7 +35,7 @@ public class DocProducer implements Runnable {
                 WordExtractor extractor = new WordExtractor(in);
                 if (docStorage.getQueues().size() >= docStorage.getMAX_SIZE()) {
                     System.out.println("暂停生产???????????????????????????????????" + file.getPath());
-                    Thread.sleep(100);
+                    Thread.sleep(5);
                 }
                 if (hunters.size() <= 100) {
                     hunters.add(getHunter(file, extractor));
@@ -66,12 +66,13 @@ public class DocProducer implements Runnable {
             String[] infos = fileName.getName().split("_");
             String text = extractor.getText();
             hunter.setName(infos[0]);
-            hunter.setPhone(infos[1].replace(" ",""));
+            hunter.setPhone(infos[1].replace(" ", ""));
             hunter.setAddress(infos[2].replace(".doc", ""));
             hunter.setEducation(getEducaion(text));
             hunter.setFileLink(fileName.getPath());
             hunter.setSchool(getSchoolName(text));
             hunter.setWorkingYears(getWorkAge(text));
+            mergeHunter(hunter);
         } catch (Exception e) {
             System.out.println("sssssss");
         }
@@ -110,5 +111,7 @@ public class DocProducer implements Runnable {
         }
         return "未知";
     }
+
+    public abstract void mergeHunter(Hunter hunter);
 
 }

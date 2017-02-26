@@ -30,7 +30,7 @@ public class Doc2Bean {
                 String[] split = Optional.of(extractor.getText()).map(s -> s.split("\r\n")).orElse(new String[20]);
                 Hunter hunter = new Hunter();
                 hunter.setName(split[1].split("：")[1]);
-                hunter.setPhone(split[2].split("：")[1].replace(" ",""));
+                hunter.setPhone(split[2].split("：")[1].replace(" ",""));
                 hunter.setAddress(split[3]);
                 hunter.setStatus(split[4]);
                 hunter.setOriginalPosition(split[5]);

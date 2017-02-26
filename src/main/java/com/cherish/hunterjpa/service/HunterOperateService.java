@@ -40,31 +40,34 @@ public class HunterOperateService {
         ExecutorService service = Executors.newCachedThreadPool();
         int i = 1;
         for (List<File> list : lists) {
-            service.submit(new DocProducer("producer" + i, docStorage, list));
+            service.submit(new DocProducer("producer" + i, docStorage, list) {
+                @Override
+                public void mergeHunter(Hunter hunter) {
+                    Hunter one = baseRepository.findOne(hunter.getPhone());
+                    hunter.setRemarks(one.getRemarks());
+                    hunter.setUpdateTime(one.getUpdateTime());
+                    hunter.setOriginalPosition(one.getOriginalPosition());
+                    hunter.setStatus(one.getStatus());
+                }
+            });
             i++;
         }
         DocConsumer docConsumer = new DocConsumer("consumer", docStorage) {
             @Override
             public void consumer(List<Hunter> hunters) {
-                for (Hunter hunter : hunters) {
-                    baseRepository.save(hunter);
-                }
+                baseRepository.save(hunters);
             }
         };
         DocConsumer docConsumer1 = new DocConsumer("consumer1", docStorage) {
             @Override
             public void consumer(List<Hunter> hunters) {
-                for (Hunter hunter : hunters) {
-                    baseRepository.save(hunter);
-                }
+                baseRepository.save(hunters);
             }
         };
         DocConsumer docConsumer2 = new DocConsumer("consumer2", docStorage) {
             @Override
             public void consumer(List<Hunter> hunters) {
-                for (Hunter hunter : hunters) {
-                    baseRepository.save(hunter);
-                }
+                baseRepository.save(hunters);
             }
         };
         service.submit(docConsumer);
