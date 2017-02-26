@@ -2,6 +2,7 @@ package com.cherish.hunterjpa.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -12,7 +13,7 @@ import javax.persistence.Id;
 public class Hunter {
 
     @Id
-    private String phone = " ";
+    private String phone;
     private String name = " ";
     private String education;
     private String school;

@@ -73,7 +73,7 @@ public abstract class Xlsx2Bean {
         hunter = new Hunter();
         try {
             hunter.setName(getValue(ssfRow.getCell(0)));
-            hunter.setPhone(getValue(ssfRow.getCell(1)));
+            hunter.setPhone(getValue(ssfRow.getCell(1)).replace(" ",""));
             hunter.setAddress(getValue(ssfRow.getCell(2)));
             hunter.setStatus(getValue(ssfRow.getCell(3)));
             hunter.setOriginalPosition(getValue(ssfRow.getCell(4)));

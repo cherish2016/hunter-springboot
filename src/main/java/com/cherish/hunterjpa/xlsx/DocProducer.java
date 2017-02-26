@@ -66,7 +66,7 @@ public class DocProducer implements Runnable {
             String[] infos = fileName.getName().split("_");
             String text = extractor.getText();
             hunter.setName(infos[0]);
-            hunter.setPhone(infos[1]);
+            hunter.setPhone(infos[1].replace(" ",""));
             hunter.setAddress(infos[2].replace(".doc", ""));
             hunter.setEducation(getEducaion(text));
             hunter.setFileLink(fileName.getPath());
