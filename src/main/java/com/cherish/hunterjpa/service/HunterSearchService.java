@@ -21,5 +21,4 @@ public class HunterSearchService {
         return baseRepository.findByNameAndPhone(name, phone);
     }
 
-
 }

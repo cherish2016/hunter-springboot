@@ -3,11 +3,15 @@ package com.cherish.hunterjpa.service;
 import com.cherish.hunterjpa.domain.Hunter;
 import com.cherish.hunterjpa.repository.HunterBaseRepository;
 import com.cherish.hunterjpa.utils.CollectionUtil;
-import com.cherish.hunterjpa.xlsx.*;
+import com.cherish.hunterjpa.xlsx.DocConsumer;
+import com.cherish.hunterjpa.xlsx.DocProducer;
+import com.cherish.hunterjpa.xlsx.DocStorage;
+import com.cherish.hunterjpa.xlsx.Xlsx2Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,12 +21,14 @@ import java.util.concurrent.Executors;
  * Created by cherish on 2017/2/18.
  */
 @Component
-public class HunterOperateService {
+class HunterOperateService {
 
     @Autowired
     private HunterBaseRepository baseRepository;
 
-    public void saveXlsx2Mysql(String xlsxPath) {
+    private static List<File> filesOfDir = new ArrayList<>();
+
+    void saveXlsx2Mysql(String xlsxPath) {
         new Xlsx2Bean() {
             @Override
             public void insertHunter2Mysql(List<Hunter> hunters) {
@@ -31,8 +37,8 @@ public class HunterOperateService {
         }.excel2Resumes(xlsxPath);
     }
 
-    public void saveDoc2Mysql(String docPath) {
-        List<File> filesOfDir = Doc2Bean.getFilesOfDir(docPath);
+    void saveDoc2Mysql(String docPath) {
+        initFilePathOfDir(new File(docPath));
         int pageSize = filesOfDir.size() / 5 + 1;
         List<List<File>> lists = CollectionUtil.splitList(filesOfDir, pageSize);
         DocStorage docStorage = new DocStorage();
@@ -75,4 +81,21 @@ public class HunterOperateService {
         service.submit(docConsumer2);
     }
 
+    private void initFilePathOfDir(File f) {
+        if (f != null) {
+            if (f.isDirectory()) {
+                File[] fileArray = f.listFiles();
+                if (fileArray != null) {
+                    for (File aFileArray : fileArray) {
+                        //递归调用
+                        initFilePathOfDir(aFileArray);
+                    }
+                }
+            } else {
+                if (f.getName().endsWith(".doc")) {
+                    filesOfDir.add(f);
+                }
+            }
+        }
+    }
 }

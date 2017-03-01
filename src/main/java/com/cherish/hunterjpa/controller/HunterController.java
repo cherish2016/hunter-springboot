@@ -20,7 +20,7 @@ public class HunterController {
     protected static Logger logger = LoggerFactory.getLogger(HunterController.class);
 
     @Autowired
-    HunterSearchService hunterSearchService;
+    private HunterSearchService hunterSearchService;
 
     @GetMapping("/search")
     public List<Hunter> h1() {
