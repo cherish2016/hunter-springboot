@@ -8,6 +8,7 @@ import com.cherish.hunterjpa.xlsx.DocProducer;
 import com.cherish.hunterjpa.xlsx.DocStorage;
 import com.cherish.hunterjpa.xlsx.Xlsx2Bean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -26,6 +27,12 @@ class HunterOperateService {
     @Autowired
     private HunterBaseRepository baseRepository;
 
+    @Value("${produceThreadNum}")
+    private String produceThreadNum;
+
+    @Autowired
+    private DocStorage docStorage;
+
     private static List<File> filesOfDir = new ArrayList<>();
 
     void saveXlsx2Mysql(String xlsxPath) {
@@ -39,10 +46,9 @@ class HunterOperateService {
 
     void saveDoc2Mysql(String docPath) {
         initFilePathOfDir(new File(docPath));
-        int pageSize = filesOfDir.size() / 5 + 1;
+        int pageSize = filesOfDir.size() / Integer.valueOf(produceThreadNum) + 1;
         List<List<File>> lists = CollectionUtil.splitList(filesOfDir, pageSize);
-        DocStorage docStorage = new DocStorage();
-
+//        DocStorage docStorage = new DocStorage();
         ExecutorService service = Executors.newCachedThreadPool();
         int i = 1;
         for (List<File> list : lists) {

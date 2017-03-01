@@ -27,5 +27,5 @@ public interface HunterBaseRepository extends JpaRepository<Hunter, String> {
 
     List<Hunter> findByworkingYears(String workingYears);
 
-
 }
+

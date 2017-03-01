@@ -19,7 +19,7 @@ public abstract class DocProducer implements Runnable {
     private DocStorage docStorage = null;
     private List<File> filesOfDir = new ArrayList<>();
 
-    public DocProducer(String name, DocStorage docStorage, List<File> filesOfDir) {
+    protected DocProducer(String name, DocStorage docStorage, List<File> filesOfDir) {
         this.name = name;
         this.docStorage = docStorage;
         this.filesOfDir = filesOfDir;
@@ -58,6 +58,7 @@ public abstract class DocProducer implements Runnable {
                 }
             }
         }
+        docStorage.atomicInteger.decrementAndGet();
     }
 
     private Hunter getHunter(File fileName, WordExtractor extractor) {

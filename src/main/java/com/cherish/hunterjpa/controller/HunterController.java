@@ -1,11 +1,14 @@
 package com.cherish.hunterjpa.controller;
 
 import com.cherish.hunterjpa.domain.Hunter;
+import com.cherish.hunterjpa.repository.HunterBaseRepository;
 import com.cherish.hunterjpa.service.HunterSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,8 +25,23 @@ public class HunterController {
     @Autowired
     private HunterSearchService hunterSearchService;
 
-    @GetMapping("/search")
-    public List<Hunter> h1() {
-        return hunterSearchService.findByNameAndPhone("高明", "15910666477");
+    @Autowired
+    private HunterBaseRepository baseRepository;
+
+    @RequestMapping(value = "/search/{filed}/{value}",method = RequestMethod.GET)
+    public List<Hunter> simpleSearchByOneField(@PathVariable("filed") String filed ,@PathVariable("value") String value) {
+        switch (filed){
+            case "name":
+                return baseRepository.findByName(value);
+            case "phone":
+                return baseRepository.findByPhone(value);
+            case "status":
+                return baseRepository.findByStatus(value);
+            case "remarks":
+                return baseRepository.findByRemarksLike(value);
+            case "originalPosition":
+                return baseRepository.findByOriginalPositionLike(value);
+        }
+        return hunterSearchService.findByNameAndPhone("", "");
     }
 }

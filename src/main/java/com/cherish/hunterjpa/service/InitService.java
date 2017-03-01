@@ -21,8 +21,8 @@ public class InitService {
 
     @PostConstruct
     public void init() {
-        hunterOperateService.saveXlsx2Mysql(filePath);
-        hunterOperateService.saveDoc2Mysql(filePath);
+//        hunterOperateService.saveXlsx2Mysql(filePath);
+//        hunterOperateService.saveDoc2Mysql(filePath);
     }
 
 }

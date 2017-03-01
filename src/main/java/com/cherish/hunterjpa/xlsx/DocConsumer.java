@@ -13,21 +13,21 @@ public abstract class DocConsumer implements Runnable {
     private String name;
     private DocStorage docStorage = null;
 
-    public DocConsumer(String name, DocStorage docStorage) {
+    protected DocConsumer(String name, DocStorage docStorage) {
         this.name = name;
         this.docStorage = docStorage;
     }
 
     public void run() {
         try {
-            while (true) {
+            while (docStorage.atomicInteger.get() > 0) {
                 if (docStorage.getQueues().size() == 0) {
-                    System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
                     Thread.sleep(100);
                 } else {
                     consumer(docStorage.pop());
                 }
             }
+            System.out.println("数据录入结束");
         } catch (Exception e) {
             e.printStackTrace();
         }

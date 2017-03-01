@@ -1,22 +1,29 @@
 package com.cherish.hunterjpa.xlsx;
 
 import com.cherish.hunterjpa.domain.Hunter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 生产者消费者模式入库
  * Created by Administrator on 2017/2/21.
  */
+@Component
 public class DocStorage {
 
     private final int MAX_SIZE = 10;
 
     private BlockingQueue<List<Hunter>> queues = new LinkedBlockingQueue<>(MAX_SIZE);
 
-    public boolean isWorking = true;
+    @Value("${produceThreadNum}")
+    private String produceThreadNum;
+
+    volatile AtomicInteger atomicInteger = new AtomicInteger(5);
 
     /**
      * 生产
@@ -24,7 +31,7 @@ public class DocStorage {
      * @param hunters DOC
      * @throws InterruptedException
      */
-    public void push(List<Hunter> hunters) throws InterruptedException {
+    void push(List<Hunter> hunters) throws InterruptedException {
         queues.put(hunters);
     }
 
@@ -34,15 +41,15 @@ public class DocStorage {
      * @return hunter
      * @throws InterruptedException
      */
-    public List<Hunter> pop() throws InterruptedException {
+    List<Hunter> pop() throws InterruptedException {
         return queues.take();
     }
 
-    public BlockingQueue<List<Hunter>> getQueues() {
+    BlockingQueue<List<Hunter>> getQueues() {
         return queues;
     }
 
-    public int getMAX_SIZE() {
+    int getMAX_SIZE() {
         return MAX_SIZE;
     }
 }
